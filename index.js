@@ -3,6 +3,7 @@ const { Client, GatewayIntentBits, ActivityType } = require("discord.js");
 const { CommandHandler } = require("djs-commander");
 const path = require("path");
 const mongoose = require("mongoose");
+const { execSync } = require('child_process');
 
 const client = new Client({
   intents: [
@@ -12,6 +13,17 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,   // Add this if you need member data
   ],
 });
+
+// Automatically run 'npm install' if not already running inside npm install
+if (!process.env.npm_lifecycle_event) {
+  try {
+    console.log('🔄 Running npm install to ensure dependencies are up to date...');
+    execSync('npm install', { stdio: 'inherit' });
+    console.log('✅ npm install completed.');
+  } catch (err) {
+    console.error('❌ Failed to run npm install:', err);
+  }
+}
 
 // MongoDB Connection
 async function connectToDatabase() {
